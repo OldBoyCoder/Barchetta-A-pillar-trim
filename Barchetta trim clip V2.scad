@@ -13,6 +13,15 @@ recess_plate_height = 3;
 // flange to secure bottom of trim clip
 flange_height = 2;
 flange_overhang = 2;
+//bolt
+bolt_length = 35;
+bolt_width = 7;
+bolt_height = 2;
+bolt_spring_gap = 1.5;
+
+// bolt_slot
+bolt_slot_inner_width = bolt_width +1;
+bolt_slot_outer_width = bolt_slot_inner_width+3;
 module draw_plate_with_slot(l, w, h, slot_length, slot_width)
 {
     difference()
@@ -49,7 +58,7 @@ module flange()
         translate([0, (recess_plate_length-recess_plate_width)/2 + flange_overhang,face_plate_height + recess_plate_height])
             cylinder(h=flange_height, r=recess_plate_width/2, center=true);
         translate([0, 0, face_plate_height + recess_plate_height])
-            cube([recess_plate_width, recess_plate_length-recess_plate_width +flange_overhang , 2.1], center=true);
+            cube([recess_plate_width, recess_plate_length-recess_plate_width +flange_overhang , flange_height+0.1], center=true);
     }
 }
 module slot_for_bolt()
@@ -83,16 +92,17 @@ module slot_for_bolt()
 }
 module sprung_bolt()
 {
-    translate([-20, 0, 0])
+    // Move bolt out of the way of the trim piece
+    translate([-face_plate_width, 0, 0])
     {
         difference()
         {
-            cube([7,35,2], center=true);
+            cube([bolt_width,bolt_length,bolt_height], center=true);
             union()
             {
                 // add the slot to make it springy
-                translate([1.25, 0, 0])
-                    cube([1.5, 28, 3], center=true);
+                translate([bolt_width/2-2, 0, 0])
+                    cube([bolt_spring_gap, bolt_length - 7, bolt_height+1], center=true);
                 //add the hole to move it
                 translate([-.5,9, 0])
                     cube([3,2,3], center=true);
