@@ -1,3 +1,6 @@
+// Set this to '1' if you want the visible trim printed
+// set this to '0' if you don't want this printed.  Usually when you have an existing
+// clip that has had its little legs broken off and you just want to ad a clip to the back
 draw_main_face = 1;
 // Main face sizes
 face_plate_length = 55;
