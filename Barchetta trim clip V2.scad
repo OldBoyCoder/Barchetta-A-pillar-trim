@@ -20,7 +20,7 @@ flange_overhang = 2;
 bolt_slot_wall_width=2;
 
 bolt_length = recess_plate_length - recess_plate_width;
-bolt_width = recess_plate_width-2*bolt_slot_wall_width-1;
+bolt_width = recess_plate_width-4*bolt_slot_wall_width-1;
 bolt_height = 3;
 bolt_spring_gap = 1.5;
 // bolt_slot
@@ -64,7 +64,7 @@ module flange()
 {
     difference()
     {
-        translate([0, (recess_plate_length-recess_plate_width)/2 + flange_overhang,face_plate_height + recess_plate_height])
+        translate([0, (recess_plate_length-recess_plate_width)/2 + flange_overhang,face_plate_height/2 + recess_plate_height+flange_height/2])
             cylinder(h=flange_height, r=recess_plate_width/2, center=true);
         translate([0, 0, face_plate_height + recess_plate_height])
             cube([recess_plate_width, recess_plate_length-recess_plate_width +flange_overhang , flange_height+0.1], center=true);
@@ -72,7 +72,7 @@ module flange()
 }
 module slot_for_bolt()
 {
-    translate([bolt_slot_offset, 0, face_plate_height + recess_plate_height])
+    translate([bolt_slot_offset, 0, face_plate_height/2 + recess_plate_height +bolt_slot_outer_height/2])
     {
         difference()
         {
@@ -83,16 +83,16 @@ module slot_for_bolt()
                 translate([0,0,-bolt_slot_wall_width/2])
                     cube([bolt_slot_inner_width, bolt_slot_length+0.1, bolt_slot_inner_height], center=true);
                 // engagement notch part way down
-                translate([0, -10, .5])
+                translate([0, -10, 0])
                     cube([bolt_slot_outer_width+0.1,notch_width,bolt_slot_outer_height+1], center=true);
-                translate([0, 10, .5])
+                translate([0, 10, 0])
                     cube([bolt_slot_outer_width+0.1,notch_width,bolt_slot_outer_height+1], center=true);
-                translate([0, -5, .5])
-                    cube([bolt_slot_outer_width+0.1,notch_width,bolt_slot_outer_height+1], center=true);
-                translate([0, 5, .5])
-                    cube([bolt_slot_outer_width+0.1,notch_width,bolt_slot_outer_height+1], center=true);
-                translate([0, 0, .5])
-                    cube([bolt_slot_outer_width+0.1,notch_width,bolt_slot_outer_height+1], center=true);
+                translate([0, -5, -(bolt_slot_wall_width)/2])
+                    cube([bolt_slot_outer_width+0.1,notch_width,bolt_slot_inner_height], center=true);
+                translate([0, 5, -(bolt_slot_wall_width)/2])
+                    cube([bolt_slot_outer_width+0.1,notch_width,bolt_slot_inner_height], center=true);
+                translate([0, 0, -(bolt_slot_wall_width)/2])
+                    cube([bolt_slot_outer_width+0.1,notch_width,bolt_slot_inner_height], center=true);
             }
         }
     }
@@ -102,27 +102,32 @@ module sprung_bolt()
     // Move bolt out of the way of the trim piece
     translate([-face_plate_width, 0, 0])
     {
-        difference()
+        union()
         {
-            cube([bolt_width,bolt_length,bolt_height], center=true);
-            union()
+            difference()
             {
-                // add the slot to make it springy
-                translate([bolt_width/2-2, 0, 0])
-                    cube([bolt_spring_gap, bolt_length - 7, bolt_height+1], center=true);
-                translate([-(bolt_width/2-2), 0, 0])
-                    cube([bolt_spring_gap, bolt_length - 7, bolt_height+1], center=true);
-                //add the hole to move it
-                translate([0,9, 0])
-                    cube([4,4,bolt_height+1], center=true);
+                cube([bolt_width,bolt_length,bolt_height], center=true);
+                union()
+                {
+                    // add the slots to make it springy
+                    translate([bolt_width/2-2, 0, 0])
+                        cube([bolt_spring_gap, bolt_length - 7, bolt_height+1], center=true);
+                    translate([-(bolt_width/2-2), 0, 0])
+                        cube([bolt_spring_gap, bolt_length - 7, bolt_height+1], center=true);
+                    //add the hole to move it
+                    translate([0,4, 0])
+                        cube([5,5,bolt_height+1], center=true);
+                }
+                    
             }
-                
+            translate([0, -(bolt_length+(0.75*bolt_width))/2, 0])
+                cube([bolt_width, bolt_width*0.75, bolt_height], center=true);
         }
         // add the little blob to click in the slots
         translate([bolt_width/2, 0, 0])
-            cylinder(h=bolt_height, r=1.5, center=true);
+            cylinder(h=bolt_height, r=1, center=true);
         translate([-bolt_width/2, 0, 0])
-            cylinder(h=bolt_height, r=1.5, center=true);
+            cylinder(h=bolt_height, r=1, center=true);
     }
 }
 $fn=100;
@@ -130,4 +135,4 @@ visible_part();
 recess_plate();
 flange();
 slot_for_bolt();
-//sprung_bolt();
+sprung_bolt();
