@@ -30,7 +30,7 @@ bolt_height = 3;
 bolt_spring_gap = 1.5;
 // bolt_slot
 bolt_slot_length = recess_plate_length - recess_plate_width;
-bolt_slot_inner_width = bolt_width +1;
+bolt_slot_inner_width = bolt_width +0.5;
 bolt_slot_outer_width = bolt_slot_inner_width+bolt_slot_wall_width*2;
 bolt_slot_inner_height = bolt_height+1;
 bolt_slot_outer_height = bolt_slot_inner_height + bolt_slot_wall_width;
