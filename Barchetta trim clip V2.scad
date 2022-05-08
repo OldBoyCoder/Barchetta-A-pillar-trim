@@ -2,6 +2,11 @@
 // set this to '0' if you don't want this printed.  Usually when you have an existing
 // clip that has had its little legs broken off and you just want to ad a clip to the back
 draw_main_face = 1;
+// Due to the fact my printer seems to mess up trying to print both the
+// bolt and the trim at the same time, I've added a couple of flags
+// so you can do none, one or both
+draw_bolt =0;
+draw_trim =1;
 // Main face sizes
 face_plate_length = 55;
 face_plate_width = 25;
@@ -48,8 +53,7 @@ module draw_plate_with_slot(l, w, h, slot_length, slot_width)
 }
 module visible_part()
 {
-    if (draw_main_face  == 1)
-        draw_plate_with_slot(face_plate_length, face_plate_width, face_plate_height, 
+    draw_plate_with_slot(face_plate_length, face_plate_width, face_plate_height, 
             face_slot_length, face_slot_width);
 }
 module recess_plate()
@@ -131,8 +135,13 @@ module sprung_bolt()
     }
 }
 $fn=100;
-visible_part();
-recess_plate();
-flange();
-slot_for_bolt();
-sprung_bolt();
+if (draw_trim ==1)
+{
+    if (draw_main_face  == 1)
+        visible_part();
+    recess_plate();
+    flange();
+    slot_for_bolt();
+}
+if (draw_bolt == 1)
+    sprung_bolt();
