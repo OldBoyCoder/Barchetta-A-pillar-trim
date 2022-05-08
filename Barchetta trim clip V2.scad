@@ -125,9 +125,9 @@ module sprung_bolt()
         }
         // add the little blob to click in the slots
         translate([bolt_width/2, 0, 0])
-            cylinder(h=bolt_height, r=1, center=true);
+            cylinder(h=bolt_height, r=0.5, center=true);
         translate([-bolt_width/2, 0, 0])
-            cylinder(h=bolt_height, r=1, center=true);
+            cylinder(h=bolt_height, r=0.5, center=true);
     }
 }
 $fn=100;
